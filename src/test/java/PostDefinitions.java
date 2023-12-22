@@ -1,46 +1,40 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
-import org.hamcrest.Matchers;
+
+import java.io.InputStream;
+
 import static org.hamcrest.Matchers.hasSize;
 
 public class PostDefinitions extends Commons {
     Response response;
+    public InputStream JSONSchema;
 
-    @Given("the Post creation API is available")
-    public void the_post_creation_api_is_available() {
+    @Given("the jsonPlaceholder api is available")
+    public void the_jsonPlaceholder_api_is_available() {
         requestSpecification.given();
     }
 
-    @When("^post is fetched with id '(\\d+)'$")
-    public void postIsFetchedWithId(int id) {
-        response = requestSpecification
-                .get(POSTS+"/"+id)
-                .then()
-                .extract().response();
-    }
-
-    @Then("^post title \"([^\"]*)\" is shown$")
-    public void postTitleIsShown(String str1) {
-        response.then()
-                .assertThat()
-                .body("title", Matchers.equalTo(str1));
+    @Then("^response has \"([^\"]*)\" as \"([^\"]*)\"$")
+    public void postTitleIsShown(String path,String value) {
+        assertBodyMatches(response, path, value);
     }
 
     @Then("^response throws status code '(\\d+)'$")
     public void responseThrowsStatusCode(int code) {
-        response.then()
-                .assertThat().statusCode(code);
+        assertStatusCode(response,code);
     }
 
-    @And("^list of all '(\\d+)' posts are shown$")
+    @And("^response shows '(\\d+)' list items$")
     public void listOfAllPostsAreShown(int count) {
         response.then()
                 .assertThat()
-                .body("$", hasSize(100));
+                .body("$", hasSize(count));
     }
 
 
@@ -70,5 +64,33 @@ public class PostDefinitions extends Commons {
                 .get(POSTS+"/"+ID+ROUTE)
                 .then()
                 .extract().response();
+    }
+
+    @When("^\"([^\"]*)\" endpoint is fetched with id '(\\d+)'$")
+    public void endpointIsFetchedWithId(String endpoint, int args) {
+        response = requestSpecification
+                .get(endpoint +"/"+args)
+                .then()
+                .extract().response();
+    }
+
+    @When("^comment is fetched with endpoint \"([^\"]*)\"$")
+    public void commentIsFetchedWithEndpoint(String route) {
+        response = requestSpecification
+                .get(route)
+                .then()
+                .extract().response();
+    }
+
+    @When("^comment is created with postid \"([^\"]*)\",name \"([^\"]*)\",email \"([^\"]*)\" and body \"([^\"]*)\"$")
+    public void commentIsCreatedWithPostIdNameEmailAndBody(String postId, String name, String email, String body) {
+        try{
+            String payload = helpers.createCommentBody(postId,name,email,body);
+            response = requestSpecification
+                    .body(payload)
+                    .post(POSTS)
+                    .then()
+                    .extract().response();
+        }catch (JsonProcessingException e){System.out.println(e.getMessage());}
     }
 }
