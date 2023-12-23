@@ -1,19 +1,14 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import io.restassured.module.jsv.JsonSchemaValidator;
 import io.restassured.response.Response;
-
-import java.io.InputStream;
 
 import static org.hamcrest.Matchers.hasSize;
 
 public class PostDefinitions extends Commons {
     Response response;
-    public InputStream JSONSchema;
 
     @Given("the jsonPlaceholder api is available")
     public void the_jsonPlaceholder_api_is_available() {
