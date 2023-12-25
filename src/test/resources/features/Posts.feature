@@ -8,7 +8,7 @@ Feature: Posts Endpoint
     Then response throws status code '404'
 
 
-  @smokeTest
+  @regressionTest
   Scenario: Fetching all posts is successful
     Given the jsonPlaceholder api is available
     When post is fetched with endpoint "/posts"
@@ -24,13 +24,43 @@ Feature: Posts Endpoint
     And response has "title" as "qui est esse"
 
 
-  @smokeTest
+  @regressionTest
   Scenario: Post creation successful
     Given the jsonPlaceholder api is available
-    When post is created with userid "4",title "automated Test" and body "random"
+    When a post is created with userid "4",title "automated Test" and body "random"
     Then response throws status code '201'
     And response has "title" as "automated Test"
     And response has "body" as "random"
+
+
+  @regressionTest
+  Scenario: Update fails for non-existent post
+    Given the jsonPlaceholder api is available
+    When post "140" is updated with userid "12", title "Updated" and body "Updated - Body"
+    Then response throws status code '500'
+
+
+  @regressionTest
+  Scenario: Post updation successful
+    Given the jsonPlaceholder api is available
+    When post "20" is updated with userid "12", title "Updated" and body "Updated - Body"
+    Then response throws status code '200'
+    And response has "body" as "Updated - Body"
+
+
+  @regressionTest
+  Scenario: Post patching successful
+    Given the jsonPlaceholder api is available
+    When post "14" is patched only with "title" as "Patching - Only title"
+    Then response throws status code '200'
+    And response has "title" as "Patching - Only title"
+
+
+  @regressionTest
+  Scenario: Post deleting successful
+    Given the jsonPlaceholder api is available
+    When the post "10" is deleted
+    Then response throws status code '200'
 
 
   @regressionTest

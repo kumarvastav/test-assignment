@@ -8,7 +8,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class Post {
-    String id;
+    String userId;
     String title;
     String body;
 }

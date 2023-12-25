@@ -25,3 +25,5 @@ Suite consists of user persona's related to the various endpoints i.e. Posts, Co
 
     3 Report path
         Checkout the path: target/cucumber-report.html/index.html
+    
+    ![](/Users/srivastav/Desktop/Screenshot 2023-12-24 at 14.02.06.png)
