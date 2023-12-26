@@ -40,7 +40,7 @@ public class Helpers {
         user.put("website",website);
 
         user.put("address",getAddress());
-        user.put("geo",getCompany());
+        user.put("company",getCompany());
 
         return objectMapper.writeValueAsString(user);
     }

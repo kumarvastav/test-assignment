@@ -1,5 +1,4 @@
 import com.fasterxml.jackson.core.JsonProcessingException;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -21,8 +20,7 @@ public class StepDefinitions extends Commons {
     }
 
     @Then("^response has \"([^\"]*)\" as \"([^\"]*)\"$")
-    public void postTitleIsShown(String path,String value) {
-        System.out.println(response.print());
+    public void websitepostTitleIsShown(String path,String value) {
         assertBodyMatches(response, path, value);
     }
 
@@ -176,6 +174,47 @@ public class StepDefinitions extends Commons {
     public void userIsFetchedWithEndpoint(String route) throws Throwable {
         response = requestSpecification
                 .get(route)
+                .then()
+                .extract().response();
+    }
+
+    @When("^a user is created with name \"([^\"]*)\", username \"([^\"]*)\", email \"([^\"]*)\", phone \"([^\"]*)\", website \"([^\"]*)\"$")
+    public void aUserIsCreatedWithNameUsernameEmailPhoneWebsite(String name, String username, String email, String phone, String website) throws JsonProcessingException {
+        String payload = helpers.createUserBody(name,username,email,phone,website);
+        response = requestSpecification
+                .body(payload)
+                .post(USERS)
+                .then()
+                .extract().response();
+    }
+
+    @When("^user \"([^\"]*)\" is updated with name \"([^\"]*)\", username \"([^\"]*)\", email \"([^\"]*)\", phone \"([^\"]*)\", website \"([^\"]*)\"$")
+    public void userIsUpdatedWithNameUsernameEmailPhoneWebsite(String userId, String name, String username, String email, String phone, String website) throws Throwable {
+        String payload = helpers.createUserBody(name,username,email,phone,website);
+        response = requestSpecification
+                .body(payload)
+                .put(USERS+"/"+userId)
+                .then()
+                .extract().response();
+    }
+
+    @When("^user \"([^\"]*)\" is patched with \"([^\"]*)\" as \"([^\"]*)\" and \"([^\"]*)\" as \"([^\"]*)\"$")
+    public void userIsPatchedWithAsAndAs(String userId, String param1, String value1, String param2, String value2) throws Throwable {
+        Map<String,String> payload = new HashMap<>();
+        payload.put(param1,value1);
+        payload.put(param2,value2);
+
+        response = requestSpecification
+                .body(objectMapper.writeValueAsString(payload))
+                .patch(USERS+"/"+userId)
+                .then()
+                .extract().response();
+    }
+
+    @When("^the user \"([^\"]*)\" is deleted$")
+    public void theUserIsDeleted(String userId) throws Throwable {
+        response = requestSpecification
+                .delete(USERS+"/"+userId)
                 .then()
                 .extract().response();
     }

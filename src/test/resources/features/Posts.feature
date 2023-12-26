@@ -1,14 +1,14 @@
 Feature: Posts Endpoint
   This feature includes tests that test Post RESTFul services
 
-  @regressionTest
+  @regression
   Scenario: Fetching invalid post fails
     Given the jsonPlaceholder api is available
     When "/posts" endpoint is fetched with id '0'
     Then response throws status code '404'
 
 
-  @regressionTest
+  @regression
   Scenario: Fetching all posts is successful
     Given the jsonPlaceholder api is available
     When post is fetched with endpoint "/posts"
@@ -16,7 +16,7 @@ Feature: Posts Endpoint
     And response shows '100' list items
 
 
-  @regressionTest
+  @regression
   Scenario: Fetching post with id is successful
     Given the jsonPlaceholder api is available
     When "/posts" endpoint is fetched with id '2'
@@ -24,7 +24,7 @@ Feature: Posts Endpoint
     And response has "title" as "qui est esse"
 
 
-  @regressionTest
+  @regression
   Scenario: Post creation successful
     Given the jsonPlaceholder api is available
     When a post is created with userid "4",title "automated Test" and body "random"
@@ -33,14 +33,14 @@ Feature: Posts Endpoint
     And response has "body" as "random"
 
 
-  @regressionTest
+  @regression
   Scenario: Update fails for non-existent post
     Given the jsonPlaceholder api is available
     When post "140" is updated with userid "12", title "Updated" and body "Updated - Body"
     Then response throws status code '500'
 
 
-  @regressionTest
+  @regression
   Scenario: Post updation successful
     Given the jsonPlaceholder api is available
     When post "20" is updated with userid "12", title "Updated" and body "Updated - Body"
@@ -48,7 +48,7 @@ Feature: Posts Endpoint
     And response has "body" as "Updated - Body"
 
 
-  @regressionTest
+  @regression
   Scenario: Post patching successful
     Given the jsonPlaceholder api is available
     When post "14" is patched only with "title" as "Patching - Only title"
@@ -56,14 +56,14 @@ Feature: Posts Endpoint
     And response has "title" as "Patching - Only title"
 
 
-  @regressionTest
+  @regression
   Scenario: Post deleting successful
     Given the jsonPlaceholder api is available
     When the post "10" is deleted
     Then response throws status code '200'
 
 
-  @regressionTest
+  @regression
   Scenario: Post comments are visible
     Given the jsonPlaceholder api is available
     When post is fetched with id "2" with endpoint "/comments"
