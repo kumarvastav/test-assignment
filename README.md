@@ -18,12 +18,21 @@ Suite consists of user persona's related to the various endpoints i.e. Posts, Co
 
 ## Instructions
     1 Clone the repo:
-        ~bash: git clone git@github.com:kumarvastav/test-assignment.git
+        ~/: git clone git@github.com:kumarvastav/test-assignment.git
 
     2 Execute tests
-        ~bash: ./gradlew clean test
+
+        - Run all the tests
+            ~/: ./gradlew clean test
+
+        - Run selective tests using tags
+            ~/: gradle test -Dcucumber.options="--tags @{TAG_NAME_USED_IN_FEATURES}"
+                Ex: gradle test -Dcucumber.options="--tags @smoke"
 
     3 Report path
         Checkout the path: target/cucumber-report.html/index.html
-    
-    ![](/Users/srivastav/Desktop/Screenshot 2023-12-24 at 14.02.06.png)
+
+## Observations
+
+1. The end-points don't support any validation on bad request payload, missing values,mandatory checks
+2. Creation/Deletion/Updation is not persistent on server so no concreate E2E could be possible from User standpoint

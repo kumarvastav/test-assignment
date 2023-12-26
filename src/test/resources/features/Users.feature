@@ -15,14 +15,14 @@ Feature: Users Endpoint
     Then response throws status code '200'
     And response shows '10' list items
 
-  @regression
+  @smoke
   Scenario: Fetching a user with id is successful
     Given the jsonPlaceholder api is available
     When "/users" endpoint is fetched with id '9'
     Then response throws status code '200'
     And response has "name" as "Glenna Reichert"
 
-  @regression
+  @smoke
   Scenario: User creation is successful
     Given the jsonPlaceholder api is available
     When a user is created with name "John Smith", username "john_smith", email "john_smith@gmail.com", phone "024-648-3804", website "ambrose.net"

@@ -16,7 +16,7 @@ Feature: Comments Endpoint
     And response shows '500' list items
 
 
-  @regression
+  @smoke
   Scenario: Fetching comments with id is successful
     Given the jsonPlaceholder api is available
     When "/comments" endpoint is fetched with id '2'
@@ -24,7 +24,7 @@ Feature: Comments Endpoint
     And response has "email" as "Jayne_Kuhic@sydney.com"
 
 
-  @regression
+  @smoke
   Scenario: Comments creation successful
     Given the jsonPlaceholder api is available
     When comment is created with postid "4",name "automated Test",email "automated_test@gmail.com" and body "lorem ipsum"

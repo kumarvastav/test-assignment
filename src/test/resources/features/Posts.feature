@@ -16,7 +16,7 @@ Feature: Posts Endpoint
     And response shows '100' list items
 
 
-  @regression
+  @smoke
   Scenario: Fetching post with id is successful
     Given the jsonPlaceholder api is available
     When "/posts" endpoint is fetched with id '2'
@@ -24,7 +24,7 @@ Feature: Posts Endpoint
     And response has "title" as "qui est esse"
 
 
-  @regression
+  @smoke
   Scenario: Post creation successful
     Given the jsonPlaceholder api is available
     When a post is created with userid "4",title "automated Test" and body "random"
@@ -56,7 +56,7 @@ Feature: Posts Endpoint
     And response has "title" as "Patching - Only title"
 
 
-  @regression
+  @smoke
   Scenario: Post deleting successful
     Given the jsonPlaceholder api is available
     When the post "10" is deleted
