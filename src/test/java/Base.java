@@ -1,14 +1,9 @@
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.hamcrest.Matchers;
-import org.hamcrest.Matchers.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
-
-import static org.hamcrest.Matchers.*;
 
 public class Commons {
     protected String POSTS = "/posts";
@@ -35,5 +30,17 @@ public class Commons {
         response.then()
                 .assertThat()
                 .statusCode(status);
+    }
+
+    public String getBodyPayload(Object entity) {
+        String payload = "";
+
+        try{
+            payload = objectMapper.writeValueAsString(entity);
+        }
+        catch (JsonProcessingException e){  
+            System.out.println(e.getMessage());
+        }
+        return payload;
     }
 }

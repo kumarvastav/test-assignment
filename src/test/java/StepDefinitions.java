@@ -13,14 +13,15 @@ import static org.hamcrest.Matchers.hasSize;
 public class StepDefinitions extends Commons {
     Response response;
     String postId;
+    String payload;
 
     @Given("the jsonPlaceholder api is available")
-    public void the_jsonPlaceholder_api_is_available() {
+    public void theJsonPlaceholderApiIsAvailable() {
         requestSpecification.given();
     }
 
     @Then("^response has \"([^\"]*)\" as \"([^\"]*)\"$")
-    public void websitepostTitleIsShown(String path,String value) {
+    public void websitePostTitleIsShown(String path,String value) {
         assertBodyMatches(response, path, value);
     }
 
@@ -47,14 +48,12 @@ public class StepDefinitions extends Commons {
 
     @When("^a post is created with userid \"([^\"]*)\",title \"([^\"]*)\" and body \"([^\"]*)\"$")
     public void postIsCreatedWithUseridTitleAndBody(String userId, String title, String body) {
-        try{
-            String payload = helpers.createPostBody(userId,title,body);
+            payload = getBodyPayload(helpers.createPostBody(userId,title,body));
             response = requestSpecification
                     .body(payload)
                     .post(POSTS)
                     .then()
                     .extract().response();
-        }catch (JsonProcessingException e){System.out.println(e.getMessage());}
     }
 
     @When("^post is fetched with id \"([^\"]*)\" with endpoint \"([^\"]*)\"$")
@@ -83,18 +82,16 @@ public class StepDefinitions extends Commons {
 
     @When("^comment is created with postid \"([^\"]*)\",name \"([^\"]*)\",email \"([^\"]*)\" and body \"([^\"]*)\"$")
     public void commentIsCreatedWithPostIdNameEmailAndBody(String postId, String name, String email, String body) {
-        try{
-            String payload = helpers.createCommentBody(postId,name,email,body);
+            payload = getBodyPayload(helpers.createCommentBody(postId,name,email,body));
             response = requestSpecification
                     .body(payload)
                     .post(COMMENTS)
                     .then()
                     .extract().response();
-        }catch (JsonProcessingException e){System.out.println(e.getMessage());}
     }
 
     @And("^a comment is created on the above post with name \"([^\"]*)\",email \"([^\"]*)\" and body \"([^\"]*)\"$")
-    public void aCommentIsCreatedOnTheAbovePostWithNameEmailAndBody(String name, String email, String body) throws Throwable {
+    public void aCommentIsCreatedOnTheAbovePostWithNameEmailAndBody(String name, String email, String body) {
         postId = response
                 .body()
                 .jsonPath().get("id").toString();
@@ -103,8 +100,8 @@ public class StepDefinitions extends Commons {
     }
 
     @And("^post \"([^\"]*)\" is updated with userid \"([^\"]*)\", title \"([^\"]*)\" and body \"([^\"]*)\"$")
-    public void aPostUpdatedWithIdUseridTitleAndBody(String postId,String userId, String title, String body) throws Throwable {
-        String payload = helpers.createPostBody(userId,title,body);
+    public void aPostUpdatedWithIdUseridTitleAndBody(String postId,String userId, String title, String body) {
+        payload = getBodyPayload(helpers.createPostBody(userId,title,body));
         response = requestSpecification
                 .body(payload)
                 .put(POSTS+"/"+postId)
@@ -113,7 +110,7 @@ public class StepDefinitions extends Commons {
     }
 
     @And("^view all the comments on the post \"([^\"]*)\"$")
-    public void viewAllTheCommentsOnThePost(String postId) throws Throwable {
+    public void viewAllTheCommentsOnThePost(String postId) {
         response = requestSpecification
                 .get(POSTS+"/"+postId+COMMENTS)
                 .then()
@@ -121,19 +118,20 @@ public class StepDefinitions extends Commons {
     }
 
     @When("^post \"([^\"]*)\" is patched only with \"([^\"]*)\" as \"([^\"]*)\"$")
-    public void postIsPatchedOnlyWithAsAndBody(String postId, String param, String value) throws Throwable {
-        Map<String,String> payload = new HashMap<>();
-        payload.put(param,value);
+    public void postIsPatchedOnlyWithAsAndBody(String postId, String param, String value) {
+        Map<String,String> body = new HashMap<>();
+        body.put(param,value);
 
+        payload = getBodyPayload(body);
         response = requestSpecification
-                .body(objectMapper.writeValueAsString(payload))
-                .patch(POSTS+"/"+postId)
+                .body(payload)
+                .patch(POSTS + "/" + postId)
                 .then()
                 .extract().response();
     }
 
     @When("^the post \"([^\"]*)\" is deleted$")
-    public void thePostIsDeleted(String postId) throws Throwable {
+    public void thePostIsDeleted(String postId) {
         response = requestSpecification
                 .delete(POSTS+"/"+postId)
                 .then()
@@ -141,8 +139,9 @@ public class StepDefinitions extends Commons {
     }
 
     @When("^comment \"([^\"]*)\" is updated with postid \"([^\"]*)\",name \"([^\"]*)\",email \"([^\"]*)\" and body \"([^\"]*)\"$")
-    public void commentIsUpdatedWithPostidNameEmailAndBody(String commentId, String postId, String name, String email, String body) throws Throwable {
-        String payload = helpers.createCommentBody(postId,name,email,body);
+    public void commentIsUpdatedWithPostidNameEmailAndBody(String commentId, String postId, String name, String email, String body) {
+        payload = getBodyPayload(helpers.createCommentBody(postId,name,email,body));
+
         response = requestSpecification
                 .body(payload)
                 .put(COMMENTS+"/"+commentId)
@@ -151,19 +150,21 @@ public class StepDefinitions extends Commons {
     }
 
     @When("^comment \"([^\"]*)\" is patched only with \"([^\"]*)\" as \"([^\"]*)\"$")
-    public void commentIsPatchedOnlyWithAs(String commentId, String param, String value) throws Throwable {
-        Map<String,String> payload = new HashMap<>();
-        payload.put(param,value);
+    public void commentIsPatchedOnlyWithAs(String commentId, String param, String value) {
+        Map<String,String> body = new HashMap<>();
+        body.put(param,value);
+
+        payload = getBodyPayload(body);
 
         response = requestSpecification
-                .body(objectMapper.writeValueAsString(payload))
-                .patch(COMMENTS+"/"+commentId)
+                .body(payload)
+                .patch(COMMENTS + "/" + commentId)
                 .then()
                 .extract().response();
     }
 
     @When("^the comment \"([^\"]*)\" is deleted$")
-    public void theCommentIsDeleted(String commentId) throws Throwable {
+    public void theCommentIsDeleted(String commentId) {
         response = requestSpecification
                 .delete(COMMENTS+"/"+commentId)
                 .then()
@@ -171,7 +172,7 @@ public class StepDefinitions extends Commons {
     }
 
     @When("^user is fetched with endpoint \"([^\"]*)\"$")
-    public void userIsFetchedWithEndpoint(String route) throws Throwable {
+    public void userIsFetchedWithEndpoint(String route) {
         response = requestSpecification
                 .get(route)
                 .then()
@@ -179,8 +180,8 @@ public class StepDefinitions extends Commons {
     }
 
     @When("^a user is created with name \"([^\"]*)\", username \"([^\"]*)\", email \"([^\"]*)\", phone \"([^\"]*)\", website \"([^\"]*)\"$")
-    public void aUserIsCreatedWithNameUsernameEmailPhoneWebsite(String name, String username, String email, String phone, String website) throws JsonProcessingException {
-        String payload = helpers.createUserBody(name,username,email,phone,website);
+    public void aUserIsCreatedWithNameUsernameEmailPhoneWebsite(String name, String username, String email, String phone, String website) {
+        payload = getBodyPayload(helpers.createUserBody(name, username, email, phone, website));
         response = requestSpecification
                 .body(payload)
                 .post(USERS)
@@ -189,30 +190,32 @@ public class StepDefinitions extends Commons {
     }
 
     @When("^user \"([^\"]*)\" is updated with name \"([^\"]*)\", username \"([^\"]*)\", email \"([^\"]*)\", phone \"([^\"]*)\", website \"([^\"]*)\"$")
-    public void userIsUpdatedWithNameUsernameEmailPhoneWebsite(String userId, String name, String username, String email, String phone, String website) throws Throwable {
-        String payload = helpers.createUserBody(name,username,email,phone,website);
+    public void userIsUpdatedWithNameUsernameEmailPhoneWebsite(String userId, String name, String username, String email, String phone, String website) {
+        payload = getBodyPayload(helpers.createUserBody(name, username, email, phone, website));
         response = requestSpecification
                 .body(payload)
-                .put(USERS+"/"+userId)
+                .put(USERS + "/" + userId)
                 .then()
                 .extract().response();
     }
 
     @When("^user \"([^\"]*)\" is patched with \"([^\"]*)\" as \"([^\"]*)\" and \"([^\"]*)\" as \"([^\"]*)\"$")
-    public void userIsPatchedWithAsAndAs(String userId, String param1, String value1, String param2, String value2) throws Throwable {
-        Map<String,String> payload = new HashMap<>();
-        payload.put(param1,value1);
-        payload.put(param2,value2);
+    public void userIsPatchedWithAsAndAs(String userId, String param1, String value1, String param2, String value2) {
+        Map<String, String> body = new HashMap<>();
+        body.put(param1, value1);
+        body.put(param2, value2);
+
+        payload = getBodyPayload(body);
 
         response = requestSpecification
-                .body(objectMapper.writeValueAsString(payload))
-                .patch(USERS+"/"+userId)
+                .body(payload)
+                .patch(USERS + "/" + userId)
                 .then()
                 .extract().response();
     }
 
     @When("^the user \"([^\"]*)\" is deleted$")
-    public void theUserIsDeleted(String userId) throws Throwable {
+    public void theUserIsDeleted(String userId) {
         response = requestSpecification
                 .delete(USERS+"/"+userId)
                 .then()

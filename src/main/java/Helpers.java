@@ -8,19 +8,17 @@ import java.util.Map;
 
 public class Helpers {
 
-    ObjectMapper objectMapper;
-    public String createPostBody(String userId, String title, String body) throws JsonProcessingException {
+    public Post createPostBody(String userId, String title, String body) {
         Post post = Post.builder()
                         .userId(userId)
                         .title(title)
                         .body(body)
                         .build();
 
-        return objectMapper.writeValueAsString(post);
+        return post;
     }
 
-    public String createCommentBody(String postId, String name, String email, String body)
-            throws JsonProcessingException {
+    public Comment createCommentBody(String postId, String name, String email, String body) {
         Comment comment = Comment.builder()
                 .postId(postId)
                 .name(name)
@@ -28,10 +26,10 @@ public class Helpers {
                 .body(body)
                 .build();
 
-        return objectMapper.writeValueAsString(comment);
+        return comment;
     }
 
-    public String createUserBody(String name, String username, String email,String phone,String website) throws JsonProcessingException {
+    public Map<String, Object> createUserBody(String name, String username, String email, String phone, String website) {
         Map<String, Object> user = new HashMap<>();
         user.put("name",name);
         user.put("username",username);
@@ -42,7 +40,7 @@ public class Helpers {
         user.put("address",getAddress());
         user.put("company",getCompany());
 
-        return objectMapper.writeValueAsString(user);
+        return user;
     }
 
     public Object getAddress() {
@@ -68,9 +66,5 @@ public class Helpers {
         company.put("bs","revolutionize end-to-end systems");
 
         return company;
-    }
-
-    public Helpers(){
-        this.objectMapper = new ObjectMapper();
     }
 }
