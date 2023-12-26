@@ -5,7 +5,7 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
-public class Commons {
+public class Base {
     protected String POSTS = "/posts";
     protected String COMMENTS = "/comments";
     protected String USERS = "/users";
@@ -14,7 +14,7 @@ public class Commons {
     protected Helpers helpers;
     protected RequestSpecification requestSpecification;
 
-    public Commons() {
+    public Base() {
         RestAssured.baseURI = "https://jsonplaceholder.typicode.com/";
         requestSpecification = RestAssured.given().contentType(ContentType.JSON);
         helpers = new Helpers();
@@ -38,7 +38,7 @@ public class Commons {
         try{
             payload = objectMapper.writeValueAsString(entity);
         }
-        catch (JsonProcessingException e){  
+        catch (JsonProcessingException e){
             System.out.println(e.getMessage());
         }
         return payload;

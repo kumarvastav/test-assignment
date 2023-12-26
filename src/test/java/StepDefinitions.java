@@ -1,4 +1,3 @@
-import com.fasterxml.jackson.core.JsonProcessingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -10,7 +9,7 @@ import java.util.Map;
 
 import static org.hamcrest.Matchers.hasSize;
 
-public class StepDefinitions extends Commons {
+public class StepDefinitions extends Base {
     Response response;
     String postId;
     String payload;
