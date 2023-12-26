@@ -1,3 +1,4 @@
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -5,9 +6,12 @@ import cucumber.api.java.en.When;
 import io.restassured.response.Response;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class StepDefinitions extends Base {
     Response response;
@@ -20,8 +24,8 @@ public class StepDefinitions extends Base {
     }
 
     @Then("^response has \"([^\"]*)\" as \"([^\"]*)\"$")
-    public void websitePostTitleIsShown(String path,String value) {
-        assertBodyMatches(response, path, value);
+    public void websitePostTitleIsShown(String param,String value) {
+        assertBodyMatches(response, param, value);
     }
 
     @Then("^response throws status code '(\\d+)'$")
@@ -55,18 +59,18 @@ public class StepDefinitions extends Base {
                     .extract().response();
     }
 
-    @When("^post is fetched with id \"([^\"]*)\" with endpoint \"([^\"]*)\"$")
-    public void postIsFetchedWithIdWithEndpoint(String ID, String ROUTE) {
+    @When("^post is fetched with id \"([^\"]*)\" using endpoint \"([^\"]*)\"$")
+    public void postIsFetchedWithIdUsingEndpoint(String postId, String route) {
         response = requestSpecification
-                .get(POSTS+"/"+ID+ROUTE)
+                .get(POSTS+"/"+postId+route)
                 .then()
                 .extract().response();
     }
 
     @When("^\"([^\"]*)\" endpoint is fetched with id '(\\d+)'$")
-    public void endpointIsFetchedWithId(String endpoint, int args) {
+    public void endpointIsFetchedWithId(String endpoint, int id) {
         response = requestSpecification
-                .get(endpoint +"/"+args)
+                .get(endpoint +"/"+ id)
                 .then()
                 .extract().response();
     }
@@ -219,5 +223,21 @@ public class StepDefinitions extends Base {
                 .delete(USERS+"/"+userId)
                 .then()
                 .extract().response();
+    }
+
+    @When("^user is fetched with id \"([^\"]*)\" using endpoint \"([^\"]*)\"$")
+    public void userIsFetchedWithIdUsingEndpoint(String userId, String route) {
+        response = requestSpecification
+                .get(USERS +"/"+userId+route)
+                .then()
+                .extract().response();
+    }
+
+
+    @And("^response shows all items with \"([^\"]*)\" as '(\\d+)'$")
+    public void responseShowsAllItemsWithAs(String param, String value) {
+        List<Integer> userIds = response.then()
+                .extract().jsonPath().get(param);
+        assertTrue(userIds.stream().anyMatch(owner -> !owner.equals(value)));
     }
 }

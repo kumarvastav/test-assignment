@@ -57,7 +57,7 @@ Feature: Posts Endpoint
 
 
   @smoke
-  Scenario: Post deleting successful
+  Scenario: Delete Post successful
     Given the jsonPlaceholder api is available
     When the post "10" is deleted
     Then response throws status code '200'
@@ -66,5 +66,5 @@ Feature: Posts Endpoint
   @regression
   Scenario: Post comments are visible
     Given the jsonPlaceholder api is available
-    When post is fetched with id "2" with endpoint "/comments"
+    When post is fetched with id "2" using endpoint "/comments"
     Then response throws status code '200'

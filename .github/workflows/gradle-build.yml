@@ -28,7 +28,10 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
-    - name: Build with Gradle
+    - name: Change Project directory
+      run: cd ..
+
+    - name: Change Project directory
       run: gradle clean test
 
     - name: Archive Rest Results

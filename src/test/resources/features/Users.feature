@@ -58,3 +58,11 @@ Feature: Users Endpoint
     Given the jsonPlaceholder api is available
     When the user "10" is deleted
     Then response throws status code '200'
+
+
+  @new
+  Scenario: User posts are visible
+    Given the jsonPlaceholder api is available
+    When user is fetched with id "2" using endpoint "/posts"
+    Then response throws status code '200'
+    And response shows all items with "userId" as '2'
