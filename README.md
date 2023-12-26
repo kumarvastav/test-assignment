@@ -1,3 +1,5 @@
+[![API Tests with RestAssured, Cucumber](https://github.com/kumarvastav/test-assignment/actions/workflows/gradle-build.yml/badge.svg)](https://github.com/kumarvastav/test-assignment/actions/workflows/gradle-build.yml)
+
 # test-assignment
 #### API testing using RestAssured, Cucumber, Java tech-stack
 
