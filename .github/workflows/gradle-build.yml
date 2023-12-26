@@ -29,7 +29,7 @@ jobs:
         distribution: 'temurin'
 
     - name: Change Project directory
-      run: ls /home/runner/work/test-assignment
+      run: ls /home/runner/work/test-assignment/test-assignment
       
     - name: Build the project
       run: gradle clean test
