@@ -60,7 +60,7 @@ Feature: Users Endpoint
     Then response throws status code '200'
 
 
-  @new
+  @regression
   Scenario: User posts are visible
     Given the jsonPlaceholder api is available
     When user is fetched with id "2" using endpoint "/posts"
